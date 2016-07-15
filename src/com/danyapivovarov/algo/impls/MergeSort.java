@@ -74,9 +74,49 @@ public class MergeSort extends AbstractSort{
         return result;
     }
 
+    public void recMergeSortBook(int[]workSpace, int lowerBound, int upperBound) {
+        if (lowerBound == upperBound) {
+            return;
+        } else {
+            int mid = (lowerBound + upperBound) / 2;
+            recMergeSortBook(workSpace, lowerBound, mid);
+            recMergeSortBook(workSpace, mid+1, upperBound);
+            mergeBook(workSpace, lowerBound, mid+1, upperBound);
+        }
+    }
+
+    private void mergeBook(int[] workSpace, int lowPtr, int highPtr, int upperBound) {
+        int j = 0;
+        int lowerBound = lowPtr;
+        int mid = highPtr - 1;
+        int n = upperBound - lowerBound + 1; //number of elements
+
+        while (lowPtr <= mid && highPtr <= upperBound) {
+            if (arr[lowPtr] < arr[highPtr]) {
+                workSpace[j++] = arr[lowPtr++];
+            } else {
+                workSpace[j++] = arr[highPtr++];
+            }
+        }
+
+        while (lowPtr <= mid) {
+            workSpace[j++] = arr[lowPtr++];
+        }
+
+        while (highPtr <= upperBound) {
+            workSpace[j++] = arr[highPtr++];
+        }
+
+        for (j = 0; j < n; j++) {
+            arr[lowerBound+j] = workSpace[j];
+        }
+    }
+
+
     public static void main(String[] args) {
-        MergeSort mergeSort = new MergeSort(DataGenerator.prepareIntegerArray(8));
-        mergeSort.sort();
+        int n = 8;
+        MergeSort mergeSort = new MergeSort(DataGenerator.prepareIntegerArray(n));
+        mergeSort.recMergeSortBook(new int[n], 0, n-1);
         System.out.println(mergeSort.arrayToString());
     }
 }
